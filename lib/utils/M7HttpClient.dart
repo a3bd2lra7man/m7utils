@@ -5,9 +5,9 @@ enum RequestType{
 }
 
 typedef HttpRequester = Future<HttpClientRequest> Function(Uri);
-Client _client;
+M7Client _client;
 
-class Client{
+class M7Client{
 
   String localhost ;
   String _token;
@@ -15,16 +15,16 @@ class Client{
 
   HttpClient httpClient;
 
-  factory Client({String localhost}){
+  factory M7Client({String localhost}){
     if(_client == null){
-      _client = Client._initial(localhost);
+      _client = M7Client._initial(localhost);
     }
     _client.localhost ??= localhost ;
     return _client;
   }
 
 
-  Client._initial(this.localhost){
+  M7Client._initial(this.localhost){
     this.httpClient = HttpClient()
       ..badCertificateCallback = ((X509Certificate cert ,String host,int port)=>true);
   }
