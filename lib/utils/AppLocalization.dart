@@ -1,5 +1,20 @@
 part of m7utils;
 
+
+mixin AppLocale on ChangeNotifier {
+
+  String _localeName = "en";
+  String get localeName => _localeName;
+
+  void changeLocale() async {
+    _localeName = _localeName == 'en' ? 'ar' : 'en';
+    (await SharedPreferences.getInstance()).setString('locale', _localeName);
+    notifyListeners();
+  }
+
+  bool get isEnglish => _localeName == 'en' ? true : false;
+}
+
 class AppLocalizations{
 
 

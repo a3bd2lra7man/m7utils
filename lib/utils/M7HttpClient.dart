@@ -26,7 +26,9 @@ class M7Client{
 
   M7Client._initial(this.localhost){
     this.httpClient = HttpClient()
-      ..badCertificateCallback = ((X509Certificate cert ,String host,int port)=>true);
+      ..badCertificateCallback = ((X509Certificate cert ,String host,int port)=>true)
+      ..connectionTimeout = Duration(seconds: 30);
+
   }
 
 
