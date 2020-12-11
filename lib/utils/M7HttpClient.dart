@@ -1,46 +1,38 @@
 part of m7utils;
 
-enum RequestType{
-  getT,post,put
-}
+enum RequestType { GET, POST, PUT }
 
 typedef HttpRequester = Future<HttpClientRequest> Function(Uri);
 M7Client _client;
 
-class M7Client{
-
-  String localhost ;
+class M7Client {
+  String localhost;
   String _token;
-
 
   HttpClient httpClient;
 
-  factory M7Client({String localhost}){
-    if(_client == null){
+  factory M7Client({String localhost}) {
+    if (_client == null) {
       _client = M7Client._initial(localhost);
     }
-    _client.localhost ??= localhost ;
+    _client.localhost ??= localhost;
     return _client;
   }
 
-
-  M7Client._initial(this.localhost){
+  M7Client._initial(this.localhost) {
     this.httpClient = HttpClient()
-      ..badCertificateCallback = ((X509Certificate cert ,String host,int port)=>true)
+      ..badCertificateCallback =
+          ((X509Certificate cert, String host, int port) => true)
       ..connectionTimeout = Duration(seconds: 30);
-
   }
 
+  dynamic _toJson(Map map) => utf8.encode(json.encode(map));
 
-  dynamic _toJson(Map map) =>  utf8.encode(json.encode(map));
-
-
-  HttpRequester _checkRequestType(RequestType requestType){
-
+  HttpRequester _checkRequestType(RequestType requestType) {
     HttpRequester request;
-    switch(requestType){
-      case RequestType.getT:
-        request =  this.httpClient.getUrl;
+    switch (requestType) {
+      case RequestType.GET:
+        request = this.httpClient.getUrl;
         break;
       case RequestType.post:
         request = this.httpClient.postUrl;
@@ -50,43 +42,44 @@ class M7Client{
         break;
     }
     return request;
-
   }
-  Future request({RequestType requestType,String url,Map data,bool isSecure = false})async{
 
+  Future request(
+      {RequestType requestType,
+      String url,
+      Map data,
+      bool isSecure = false}) async {
     try {
-
-      HttpClientRequest request = await _checkRequestType(requestType)(Uri.parse("${this.localhost}/$url"),);
+      HttpClientRequest request = await _checkRequestType(requestType)(
+        Uri.parse("${this.localhost}/$url"),
+      );
       request.headers.add(HttpHeaders.contentTypeHeader, 'application/json');
-      if(isSecure) request.headers.add(HttpHeaders.authorizationHeader, "Bearer $_token");
-      if(data != null)  request.add(this._toJson(data));
+      if (isSecure)
+        request.headers.add(HttpHeaders.authorizationHeader, "Bearer $_token");
+      if (data != null) request.add(this._toJson(data));
       return await _getResponse(request);
-
-    }catch(e){
+    } catch (e) {
       print(e);
       return this._errorMessage;
-
     }
   }
 
-
-  Future<Map> _getResponse(HttpClientRequest request )async{
-
+  Future<Map> _getResponse(HttpClientRequest request) async {
     HttpClientResponse response = await request.close();
     String reply = await response.transform(utf8.decoder).join();
     Map res = json.decode(reply);
-    print("response from server : -------------------------------------------------------- \n $res");
+    print(
+        "response from server : -------------------------------------------------------- \n $res");
     return res;
-
   }
 
   Map _errorMessage = {
-    "resultCode" : 0,
-    "errorEnMessage" : "there is no internet",
-    "errorArMessage" : "لا يوجد اتصال بالانترنت"
+    "resultCode": 0,
+    "errorEnMessage": "there is no internet",
+    "errorArMessage": "لا يوجد اتصال بالانترنت"
   };
 
-  void setToken(String token){
+  void setToken(String token) {
     _token = token;
   }
 }
