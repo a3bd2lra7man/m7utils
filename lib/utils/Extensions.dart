@@ -30,8 +30,33 @@ extension M7Extensions on BuildContext {
   // navigate back to previous one in the stack by tag
   void popWithResult(result) => Navigator.pop(this, result);
 
-  T provider<T extends ChangeNotifier>() => Provider.of<T>(this, listen: false);
-
   // for translating
   String translate(String key) => AppLocalizations.of(this).translate(key);
+
+
+  T provider<T extends ChangeNotifier>() => this.read<T>();
+
+  T listen<T extends ChangeNotifier>() => this.watch<T>();
+  void showNotImplemented(){
+    showDialog(
+        context: this,
+        builder: (context)
+        => SimpleDialog(
+
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          children: <Widget>[
+            SizedBox(
+              height:context.height *.05,),
+            Center(child: Text("NOT IMPLEMENTED YET"),),
+            SizedBox(height: context.height *.05,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(onPressed:()=> Navigator.of(this).pop(), child: Text("OK")),
+              ],
+            )
+          ],
+        )
+    );
+  }
 }
