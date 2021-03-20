@@ -6,7 +6,7 @@ typedef HttpRequester = Future<HttpClientRequest> Function(Uri);
 late M7Client _client;
 
 class M7Client {
-  String localhost;
+  String? localhost;
   String? _token;
 
   late HttpClient httpClient;

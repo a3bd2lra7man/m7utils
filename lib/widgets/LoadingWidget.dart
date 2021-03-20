@@ -68,10 +68,7 @@ class LoadingWidget extends StatelessWidget {
         return loading.loadingWidget;
         break;
       case LoadingStatus.isError:
-        return loading.errorWidget(onClick) ??
-            Center(
-              child: Text(loading.errorMessage),
-            );
+        return loading.errorWidget(onClick);
         break;
       case LoadingStatus.isData:
         return child;
