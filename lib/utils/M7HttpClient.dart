@@ -3,7 +3,7 @@ part of m7utils;
 enum RequestType { GET, POST, PUT }
 
 typedef HttpRequester = Future<HttpClientRequest> Function(Uri);
-late M7Client _client;
+M7Client? _client;
 
 class M7Client {
   String? localhost;
@@ -15,8 +15,8 @@ class M7Client {
     if (_client == null) {
       _client = M7Client._initial(localhost);
     }
-    _client.localhost ??= localhost;
-    return _client;
+    _client!.localhost ??= localhost;
+    return _client!;
   }
 
   M7Client._initial(this.localhost) {
