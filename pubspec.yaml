@@ -1,6 +1,6 @@
 name: m7utils
 description: A Helper package for fast development.
-version: 0.0.9
+version: 0.0.9+1
 author:
 homepage: https://github.com/a3bd2lra7man/m7utils
 
@@ -13,7 +13,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   provider: 
-  m7db: ^0.0.9
+  m7db: ^0.0.9+1
   shared_preferences: 
 dev_dependencies:
   flutter_test:
