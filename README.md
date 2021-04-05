@@ -40,6 +40,10 @@ main(){
 
     // if you are using assets/lang/localeCode.json
     context.translate('key');
+
+    // for navigation
+    context.navigateTo(Scaffold(),clearStack:false);
+    context.navigateToByTag('/loginPage',clearStack:true);
 }  
 ``` 
 
