@@ -1,14 +1,14 @@
-# m7db
+# m7utils
 
 A Simple Dart Package that helps to fast development 
 
-    1- gives screen width by using extension
+    1- gives screen width using extension
     
-    2- gives screen height by using extension
+    2- gives screen height using extension
     
-    3- gives app theme by using extension
+    3- gives app theme using extension
     
-    4- gives app text theme by using extension
+    4- gives app text theme using extension
 
     5- helps with translation
 
