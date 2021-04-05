@@ -1,14 +1,45 @@
-# m7utils
+# m7db
 
-A Helper package for fast development.
+A Simple Dart Package that helps to fast development 
 
-## Getting Started
+    1- gives screen width by using extension
+    
+    2- gives screen height by using extension
+    
+    3- gives app theme by using extension
+    
+    4- gives app text theme by using extension
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+    5- helps with translation
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+    6- gives default AppLocalization class
+
+## Whats will you get in the end 
+
+```dart
+import 'package:m7utils/m7utils.dart';
+
+
+main(){
+    // the width
+    context.width;
+
+    // the height
+    context.height;
+
+    // the app them
+    context.theme;
+
+    // the app text them 
+    context.textTheme;
+
+    // to return to the prevouis page in the stack
+    context.pop();
+
+    context.popWithResult("dynamic");
+
+    // if you are using assets/lang/localeCode.json
+    context.translate('key');
+}  
+``` 
+
