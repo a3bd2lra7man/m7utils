@@ -1,6 +1,7 @@
 part of m7utils;
 
 enum RequestType { GET, POST, PUT }
+enum BodyType { form, json }
 
 typedef HttpRequester = Future<HttpClientRequest> Function(Uri);
 M7Client? _client;
@@ -26,7 +27,10 @@ class M7Client {
       ..connectionTimeout = Duration(seconds: 30);
   }
 
-  dynamic _toJson(Map map) => utf8.encode(json.encode(map));
+  List<int> _toRawShape(Map map) => utf8.encode(json.encode(map));
+
+  List<int> _toFormShape(Map map) =>
+      utf8.encode(Uri.encodeQueryComponent(json.encode(map))); // utf8 encode
 
   HttpRequester _checkRequestType(RequestType requestType) {
     HttpRequester request;
@@ -44,23 +48,44 @@ class M7Client {
     return request;
   }
 
-  Future request(
-      {required RequestType requestType,
-      required String url,
-      Map? data,
-      bool isSecure = false}) async {
+  String _getContentType(BodyType bodyType) {
+    switch (bodyType) {
+      case BodyType.form:
+        return 'application/x-www-form-urlencoded';
+      case BodyType.json:
+        return 'application/json';
+    }
+  }
+
+  Future request({
+    required RequestType requestType,
+    required String url,
+    Map? data,
+    BodyType bodyType = BodyType.json,
+    bool isSecure = false,
+  }) async {
     try {
       HttpClientRequest request = await _checkRequestType(requestType)(
         Uri.parse("${this.localhost}/$url"),
       );
-      request.headers.add(HttpHeaders.contentTypeHeader, 'application/json');
+      request.headers
+          .add(HttpHeaders.contentTypeHeader, _getContentType(bodyType));
       if (isSecure)
         request.headers.add(HttpHeaders.authorizationHeader, "Bearer $_token");
-      if (data != null) request.add(this._toJson(data));
+      if (data != null) request.add(_getDataShape(bodyType, data));
       return await _getResponse(request);
     } catch (e) {
       print(e);
       return this._errorMessage;
+    }
+  }
+
+  List<int> _getDataShape(BodyType bodyType, Map data) {
+    switch (bodyType) {
+      case BodyType.form:
+        return _toFormShape(data);
+      case BodyType.json:
+        return _toRawShape(data);
     }
   }
 
