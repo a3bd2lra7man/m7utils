@@ -2,6 +2,7 @@ part of m7utils;
 
 enum RequestType { GET, POST, PUT }
 enum BodyType { form, json }
+enum M7ResponseStatus { ok, validationError, serverError, noInternet }
 
 typedef HttpRequester = Future<HttpClientRequest> Function(Uri);
 M7Client? _client;
@@ -57,7 +58,7 @@ class M7Client {
     }
   }
 
-  Future request({
+  Future<M7Response> request({
     required RequestType requestType,
     required String url,
     Map? data,
@@ -76,7 +77,7 @@ class M7Client {
       return await _getResponse(request);
     } catch (e) {
       print(e);
-      return this._errorMessage;
+      return M7Response(M7ResponseStatus.noInternet, this._errorMessage);
     }
   }
 
@@ -89,13 +90,10 @@ class M7Client {
     }
   }
 
-  Future<Map> _getResponse(HttpClientRequest request) async {
+  Future<M7Response> _getResponse(HttpClientRequest request) async {
     HttpClientResponse response = await request.close();
-    String reply = await response.transform(utf8.decoder).join();
-    Map res = json.decode(reply);
-    print(
-        "response from server : -------------------------------------------------------- \n $res");
-    return res;
+    return M7Response(
+        _getResponseStatus(response), await _convertReponse(response));
   }
 
   Map _errorMessage = {
@@ -107,4 +105,30 @@ class M7Client {
   void setToken(String token) {
     _token = token;
   }
+
+  M7ResponseStatus _getResponseStatus(HttpClientResponse response) {
+    int statusCode = response.statusCode;
+    if (statusCode == 200) return M7ResponseStatus.ok;
+    if (statusCode >= 400 && statusCode < 500)
+      return M7ResponseStatus.validationError;
+    if (statusCode >= 500 && statusCode < 600)
+      return M7ResponseStatus.serverError;
+    else
+      return M7ResponseStatus.noInternet;
+  }
+
+  Future<Map> _convertReponse(HttpClientResponse response) async {
+    String reply = await response.transform(utf8.decoder).join();
+    Map res = json.decode(reply);
+    print(
+        "M7Client => response from server : -------------------------------------------------------- \n $res");
+    return res;
+  }
+}
+
+class M7Response {
+  final M7ResponseStatus status;
+  final Map data;
+
+  const M7Response(this.status, this.data);
 }
