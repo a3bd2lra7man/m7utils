@@ -119,7 +119,7 @@ class M7Client {
 
   Future<Map> _convertReponse(HttpClientResponse response) async {
     String reply = await response.transform(utf8.decoder).join();
-    Map res = json.decode(reply);
+    dynamic res = json.decode(reply);
     print(
         "M7Client => response from server : -------------------------------------------------------- \n $res");
     return res;
