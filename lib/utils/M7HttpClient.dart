@@ -117,7 +117,7 @@ class M7Client {
       return M7ResponseStatus.noInternet;
   }
 
-  Future<Map> _convertReponse(HttpClientResponse response) async {
+  Future<dynamic> _convertReponse(HttpClientResponse response) async {
     String reply = await response.transform(utf8.decoder).join();
     dynamic res = json.decode(reply);
     print(
