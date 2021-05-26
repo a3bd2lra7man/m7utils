@@ -128,7 +128,7 @@ class M7Client {
 
 class M7Response {
   final M7ResponseStatus status;
-  final Map data;
+  final dynamic data;
 
   const M7Response(this.status, this.data);
 }
