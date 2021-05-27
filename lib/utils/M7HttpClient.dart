@@ -30,8 +30,16 @@ class M7Client {
 
   List<int> _toRawShape(Map map) => utf8.encode(json.encode(map));
 
-  List<int> _toFormShape(Map map) =>
-      utf8.encode(Uri.encodeQueryComponent(json.encode(map))); // utf8 encode
+  List<int> _toFormShape(Map map) {
+    var parts = [];
+    map.forEach((key, value) {
+      parts.add('${Uri.encodeQueryComponent(key)}='
+          '${Uri.encodeQueryComponent(value)}');
+    });
+    var formData = parts.join('&');
+
+    return utf8.encode(formData); // utf8 encode
+  }
 
   HttpRequester _checkRequestType(RequestType requestType) {
     HttpRequester request;
