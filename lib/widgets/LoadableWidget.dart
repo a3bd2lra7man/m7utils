@@ -57,9 +57,11 @@ mixin Loading on ChangeNotifier {
 class LoadableWidget extends StatelessWidget {
   final Loading provider;
   final Widget child;
-  final Function()? onClick;
+  final Function()? onErrorWidgetClicked;
   const LoadableWidget(
-      {required this.provider, required this.child, required this.onClick});
+      {required this.provider,
+      required this.child,
+      required this.onErrorWidgetClicked});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class LoadableWidget extends StatelessWidget {
         return provider.loadingWidget;
         break;
       case LoadingStatus.isError:
-        return provider.errorWidget(onClick);
+        return provider.errorWidget(onErrorWidgetClicked);
         break;
       case LoadingStatus.isData:
         return child;
