@@ -48,27 +48,27 @@ mixin Loading on ChangeNotifier {
     notifyListeners();
   }
 
-  void loading() {
+  void showLoadingWidget() {
     _status = LoadingStatus.isLoading;
     notifyListeners();
   }
 }
 
-class LoadingWidget extends StatelessWidget {
-  final Loading loading;
+class LoadableWidget extends StatelessWidget {
+  final Loading provider;
   final Widget child;
   final Function()? onClick;
-  const LoadingWidget(
-      {required this.loading, required this.child, required this.onClick});
+  const LoadableWidget(
+      {required this.provider, required this.child, required this.onClick});
 
   @override
   Widget build(BuildContext context) {
-    switch (loading._status) {
+    switch (provider._status) {
       case LoadingStatus.isLoading:
-        return loading.loadingWidget;
+        return provider.loadingWidget;
         break;
       case LoadingStatus.isError:
-        return loading.errorWidget(onClick);
+        return provider.errorWidget(onClick);
         break;
       case LoadingStatus.isData:
         return child;

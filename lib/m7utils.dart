@@ -19,4 +19,4 @@ part 'utils/M7HttpClient.dart';
 part 'utils/Extensions.dart';
 part 'utils/AppLocalization.dart';
 part 'widgets/CircleImage.dart';
-part 'widgets/LoadingWidget.dart';
+part 'widgets/LoadableWidget.dart';

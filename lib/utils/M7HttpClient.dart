@@ -66,27 +66,37 @@ class M7Client {
     }
   }
 
-  Future<M7Response> request({
-    required RequestType requestType,
-    required String url,
-    Map? data,
-    BodyType bodyType = BodyType.json,
-    bool isSecure = false,
-  }) async {
+  Future<M7Response> request(
+      {required RequestType requestType,
+      required String url,
+      Map? data,
+      BodyType bodyType = BodyType.json,
+      bool isSecure = false,
+      Map? headers}) async {
     try {
       HttpClientRequest request = await _checkRequestType(requestType)(
         Uri.parse("${this.localhost}/$url"),
       );
-      request.headers
-          .add(HttpHeaders.contentTypeHeader, _getContentType(bodyType));
-      if (isSecure)
-        request.headers.add(HttpHeaders.authorizationHeader, "Bearer $_token");
+      _addHeaders(request, headers, isSecure, bodyType);
       if (data != null) request.add(_getDataShape(bodyType, data));
       return await _getResponse(request);
     } catch (e) {
       print(e);
       return M7Response(M7ResponseStatus.noInternet, this._errorMessage);
     }
+  }
+
+  void _addHeaders(HttpClientRequest request, Map? headers, bool isSecure,
+      BodyType bodyType) {
+    if (headers != null) if (headers.isNotEmpty)
+      headers.forEach((key, value) {
+        request.headers.add(key, value);
+      });
+    if (isSecure)
+      request.headers.add(HttpHeaders.authorizationHeader, "Bearer $_token");
+
+    request.headers
+        .add(HttpHeaders.contentTypeHeader, _getContentType(bodyType));
   }
 
   List<int> _getDataShape(BodyType bodyType, Map data) {
