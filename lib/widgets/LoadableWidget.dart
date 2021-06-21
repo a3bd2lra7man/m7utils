@@ -37,12 +37,12 @@ mixin Loading on ChangeNotifier {
         ),
       );
 
-  void dataComes() {
+  void showChild() {
     _status = LoadingStatus.isData;
     notifyListeners();
   }
 
-  void errorCome(String error) {
+  void showErrorWidget({required String error}) {
     _status = LoadingStatus.isError;
     errorMessage = error;
     notifyListeners();
